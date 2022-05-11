@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="container">
+    <div>
+        <input type="text" id="search" v-model="word" placeholder="搜索词">
+        <button type="button" @click="search">按钮</button>
+    </div>
+
+    <table>
+        <tr>
+            <th>NAME</th>
+            <th>SCORE</th>
+            <th>TEXT</th>
+        </tr>
+        <tr v-for="item in wordList">
+            <td>{{item.NAME}}</td>
+            <td>{{item.SCORE}}</td>
+            <td v-html="item.TEXT">{{item.TEXT}}</td>
+        </tr>
+    </table>
+
+</div>
+
+
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+
+<script>
+    vm = new Vue({
+        el: "#container",
+        data() {
+            return {
+                word: null,
+                wordList: []
+            }
+        },
+        methods: {
+            search() {
+                axios({
+                    url: 'http://localhost:8080/search',
+                    method: 'post',
+                    params: {
+                        s: this.word
+                    }
+                }).then(res => {
+                    if (res.data.code === "200") {
+                        console.log(res.data.data)
+                        this.wordList = res.data.data;
+                    }
+                }).catch(() => {
+
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>
